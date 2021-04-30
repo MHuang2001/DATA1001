@@ -1,0 +1,196 @@
+---
+title: "Project 3; Penalties"
+author: "500494994"
+subtitle: "Impact of Double Demerits on Offences "
+date: "University of Sydney | DATA1001 | April 2020"
+output:
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    self_contained: yes
+    theme: flatly
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    code_folding: hide
+---
+
+<br>
+
+# Recommendaton
+
+To NSW Government; based on the evidence provided and the analysed trends, the recommendation to keep and maintain holding double demerit points during holiday season of December, January and February should be reinforced. As this report will show whilst using evidence from 2016/17, there are major decrease in traffic offences during these periods, due to the higher risk of losing ones licence, thus creating the roads safer for drivers and pedestrians. 
+
+<br>
+
+# Evidence
+
+Using a 2 sample T Test, we can analyse the impact of the double demerit points and if it actually decreases the number of offences during the holiday months. Using December, January and February as the holiday period (when double points are enforced), we can create two hypotheses in order to use a T Test. Subsequently, March, April, May, June, July, August, September, and November are the normal demerit period. Note that both data entries from 2016 and 2017 are used to ensure that this is a trend, rather than a coincidence. In this case we call H_0 (Null Hypothesis), no difference in the mean number of offences. Conversely, H_1 (Alternate Hypothesis) represents that there is a difference in the mean between the two groups. Using a visual representation (Fig.1) of a double boxplot, the spread of offences and quartiles can be compared. Already, we can see that the maxima in non-double demerit months is much higher than the double demerit months. Concurrently, the minima follow the same trend. Using a plot (Fig 2,3) the blue colours represents the double demerit months, while the red are the normal months. 
+```{r, message=FALSE, warning=FALSE}
+#double boxplot
+library(plotly)
+
+
+dd= c(3762,3930,4115,3802,3895,3995)
+ndd= c(4079,3996,4208,3979,3833,3995,4030,3975,4056,4104,3920,4095,3934,4051,4087,4139,4062,4257)
+fig <- plot_ly(y = dd, type = "box", name="Double Demerit Periods")
+fig <- fig %>% add_trace(y = ndd, name="Non-Double Demerit Periods") %>% layout(title="Figure 1")
+fig
+
+var.test(dd,ndd)
+```
+
+
+```{r, eval = F}
+## Option 2: Penalty Notices in Australia
+penalties = read.csv("http://www.maths.usyd.edu.au/u/UG/JM/DATA1001/r/current/projects/2020data/penalities.csv")
+
+
+
+
+
+## Quick snapshot
+
+#dim(penalties)
+#str(penalties)
+
+#Correlation between Offence date (MONTH) and total number of offences.
+(library(ggplot2))
+
+
+```
+
+
+
+
+```{r}
+                   
+offence17<- c(3802,3895,4079,3996,4208,3979,3833,3995,4030,3975,4056,3995)
+
+
+offence16<- c(3762,3930,4104,3920,4095,3934,4051,4087,4139,4062,4257,4115)
+
+
+
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+#PLOTLY WORKS YES
+
+
+#2016 Offences
+library(plotly)
+library(dplyr)
+
+df1= data.frame(x=c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"),y=c(3762,3930,4104,3920,4095,3934,4051,4087,4139,4062,4257,4115))
+df1$x=factor(df1$x, levels = month.abb)
+
+p16 = plot_ly (x=df1$x,y=df1$y, type = 'scatter',mode='markers', size=c(20,20,20,20,20,20,20,20,20,20,20,20), marker=list(color=c('blue','blue','red','red','red','red','red','red','red', 'red','red' ,'blue'))) %>%   layout(title="Number of Offences in 2016 (Fig 2)", 
+         xaxis=list(title="Month"), 
+        yaxis=list(title="Accidents") )
+p16
+
+#2017 Offences 
+
+df2 = data.frame(x =c("Jan","Feb","Mar","Apr","May","Jun","Jul",
+"Aug","Sep","Oct","Nov","Dec" ), y =c(3802,3895,4079,3996,4208,
+3979,3833,3995,4030,3975,4056,3995))
+df2$x = factor(df2$x, levels = month.abb)
+p17=plot_ly(x=df2$x,y=df2$y, type='scatter',mode='markers', size=c(20,20,20,20,20,20,20,20,20,20,20,20),marker=list(color=c('blue','blue','red','red','red','red','red','red','red', 'red','red','blue'))) %>%
+     layout(title="Number of Offences in 2017 (Fig 3)", 
+         xaxis=list(title="Month"), 
+        yaxis=list(title="Accidents"))
+p17
+
+#####################
+#x <- penalties$OFFENCE_MONTH
+#plot_ly(x=x ,type ='histogram') %>% layout(title="Offences")
+
+# What camera to implement more often...which ones find the most amount of crimes. 
+
+
+
+```
+
+
+
+```{r, message=FALSE, warning=FALSE}
+#HYPOTHESIS TEST?
+  #OFFENCES ARE SIGNIFICANTLY LOWER DURING HOLIDAY SEASONS; DEC, JAN
+  #DOES DOUBLE DEMERIT POINTS CHANGE NUMBER OF OFFENCES:
+            #2 SIDED T TEST (2016,2017) 
+               # LET X=MEAN OF DOUBLE DEMERIT MONTHS (Jan, Feb, Dec)
+                #LET Y=MEAN OF NO DOUBLE DEMERIT MONTHS (Mar, Apr, May, Jun, Jul, Aug, Sep, Nov)
+                #H_0 = NO DIFFERENCE
+                #H_1 = DIFFERENCE
+
+
+offence=data.frame(x=c(3802,3895,4079,3996,4208,3979,3833,3995,4030,3975,4056,3995), y=c(3762,3930,4104,3920,4095,3934,4051,4087,4139,4062,4257,4115))
+
+library(ggfortify)
+autoplot(lm(y~x, data = offence), which =2)
+
+
+
+  
+
+```
+
+
+Our assumptions in this test is that the sample of people are from the same greater region, thus nullifying outlier results (i.e. dodgy speed cameras, higher police population). In addition, we assume that the sample size is large enough that it can follow the central limit theorem. Based on the QQPlot, because of the plot lying along the straight diagonal point, we can assume that the data is normally distributed.  
+
+
+
+
+
+
+```{r, message=FALSE, warning=FALSE}
+#t.test
+
+t.test(dd,ndd,
+      var.equal = T)
+       
+
+threshold = round(2.4959,2)  # test stat from t.test
+curve(dt(x, 24), -4,4, col="black", lwd=2, xlab="t_22", ylab="", main ="HO curve: 2 sided p-value (Fig 4)")
+sequence1 = seq(threshold, 4, 0.1)
+polygon(x = c(threshold,sequence1,4),
+        y = c(0, dt(sequence1,24), 0),
+       col = "red")
+sequence2 = seq(-threshold, -4, -0.1)
+polygon(x = c(-threshold,sequence2,-4),
+        y = c(0, dt(sequence2,24), 0),
+       col = "red")
+abline(v=threshold,lty=2,col="black")
+abline(v=-threshold,lty=2,col="black")
+axis(1, c(-threshold,threshold) , col= "blue")
+```
+
+Mean Differences
+```{r, warning=FALSE, message=FALSE}
+
+
+dd=c(3762,3930,4115,3802,3895,3995)
+ndd=c(4079,3996,4208,3979,3833,3995,4030,3975,4056,4104,3920,4095,3934,4051,4087,4139,4062,4257)
+mean(ndd)-mean(dd)
+
+```                
+
+Looking at the test statistic the p-value = 0.02... thus, we reject the null hypothesis as being there is no difference between the two means, as the p-value is not greater than 0.05. This can also be seen from figure 2, and the area/percentage from the t value. Due to this, it demonstrates the effect and usefulness of the double demerit system in order to limit the amount of offences. Whilst looking at the confidence interval, as we test for the difference to be zero, we reject the hypothesis again, as it does not fall between the confidence interval; -234 and -21. Looking at the mean differences, it is evident that implementing double demerits has impacted the number of offences occured. 
+
+In addition to the hypothesis testing, from an economic standpoint; double demerit periods do not entail extra funding to the police department, as there is no need to install extra cameras or release extra police patrols. Ethically, although drivers who still break the law must pay the price of demerits and fines, lives will be saved due to the diminishing amounts of offences during these time periods. 
+
+ 
+
+        
+                
+                
+                
+
+
+<br>
+
+# Other Evidence 
+
+Whilst NSW enforces double demerits, states like VIC do not. It is evident that enforcing double demerits diminishes offences, by looking at the statistic between the two states. In 2016 OCT-DEC, 215 704 offences were commited in [VIC GOV](https://www.camerassavelives.vic.gov.au/road-safety/statistics/fines-by-category/speeding-categories-fixed-and-mobile-cameras-2016-17). However, using a double demerit system in NSW, only 138 363 offences were reported from [NSW GOV](https://www.revenue.nsw.gov.au/help-centre/resources-library/statistics). In addition to this, NSW has roughly 1 million more residents than VIC, thus a higher chance of law breaking. Due to the massive differences in offences commited, it is a must, that NSW reinforces double demerit points in order to maintain a safe road community.
